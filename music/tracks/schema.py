@@ -11,3 +11,17 @@ class Query(graphene.ObjectType):
 
     def resolve_tracks(self,info):
         return Tracks.objects.all()
+class CreateTrack(graphene.Mutation):
+    track = graphene.Field(TrackType)
+    class Arguments:
+        title = graphene.String()
+        description = graphene.String()
+        url = graphene.String()
+    def mutate(self,info,title,description,url):
+        track = Tracks(title=title,description=description,url=url)
+        track.save()
+        return CreateTrack(track=track)
+
+class Mutation(graphene.ObjectType):
+    create_track = CreateTrack.Field()
+        
