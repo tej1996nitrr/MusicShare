@@ -8,10 +8,15 @@ class TrackType(DjangoObjectType):
 
 class Query(graphene.ObjectType):
     tracks = graphene.List(TrackType)
+    track = graphene.Field(TrackType, id=graphene.Int(required=True))
 
     def resolve_tracks(self, info):
         return Tracks.objects.all()
-        
+    
+    def resolve_track(self, info, id):
+        return Tracks.objects.get(id=id)
+    
+
 class CreateTrack(graphene.Mutation):
     track = graphene.Field(TrackType)
     class Arguments:
