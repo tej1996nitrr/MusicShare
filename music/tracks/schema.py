@@ -9,8 +9,9 @@ class TrackType(DjangoObjectType):
 class Query(graphene.ObjectType):
     tracks = graphene.List(TrackType)
 
-    def resolve_tracks(self,info):
+    def resolve_tracks(self, info):
         return Tracks.objects.all()
+        
 class CreateTrack(graphene.Mutation):
     track = graphene.Field(TrackType)
     class Arguments:
@@ -24,7 +25,7 @@ class CreateTrack(graphene.Mutation):
         track = Tracks(title=title,description=description,url=url)
         track.save()
         return CreateTrack(track=track)
-        
+
 # Creates a mutation class with a field to be resolved, which points to our mutation defined befor
 class Mutation(graphene.ObjectType):
     create_track = CreateTrack.Field()
