@@ -287,3 +287,9 @@ If logged in by different user:
     "updateTrack": null
   }
 }
+
+mutation{
+  deleteTrack(trackId:1){
+    trackId
+  }
+}
