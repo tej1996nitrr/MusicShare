@@ -48,7 +48,7 @@ class UpdateTrack(graphene.Mutation):
     
     def mutate(self, info, track_id, title, description, url):
         user = info.context.user
-        track=Track.objects.get(id=track_id)
+        track=Tracks.objects.get(id=track_id)
 
         if track.posted_by != user:
             raise Exception('Not permitted to update this track.')
