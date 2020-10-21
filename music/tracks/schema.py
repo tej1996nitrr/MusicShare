@@ -2,9 +2,11 @@ import graphene
 from graphene_django import DjangoObjectType
 from .models import Tracks
 
+
 class TrackType(DjangoObjectType):
     class Meta:
         model = Tracks
+
 
 class Query(graphene.ObjectType):
     tracks = graphene.List(TrackType)
@@ -35,7 +37,30 @@ class CreateTrack(graphene.Mutation):
         track.save()
         return CreateTrack(track=track)
 
-# Creates a mutation class with a field to be resolved, which points to our mutation defined befor
+class UpdateTrack(graphene.Mutation):
+    track = graphene.Field(TrackType)
+
+    class Arguments:
+        track_id = graphene.ID(required=True)
+        title = graphene.String()
+        description = graphene.String()
+        url = graphene.String()
+    
+    def mutate(self, info, track_id, title, description, url):
+        user = info.context.user
+        track=Track.objects.get(id=track_id)
+
+        if track.posted_by != user:
+            raise Exception('Not permitted to update this track.')
+
+        track.title = title
+        track.description = description
+        track.url = url
+        track.save()
+        return UpdateTrack(track=track)
+
+# Creates a mutation class with a field to be resolved, which points to our mutation defined before
 class Mutation(graphene.ObjectType):
     create_track = CreateTrack.Field()
+    update_track = UpdateTrack.Field()
         
