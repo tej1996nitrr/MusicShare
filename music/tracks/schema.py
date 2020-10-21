@@ -27,7 +27,10 @@ class CreateTrack(graphene.Mutation):
 
     # mutation method: it creates a link in the database using the data sent by the user,
     def mutate(self, info, title, description, url):
-        user = info.context.user or None
+        user = info.context.user
+        if user.is_anonymous:
+            raise Exception('Log in to add a track.')
+
         track = Tracks(title=title, description=description, url=url, posted_by=user)
         track.save()
         return CreateTrack(track=track)
