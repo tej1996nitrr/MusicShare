@@ -240,3 +240,50 @@ o/p:
     }
   }
 }
+
+#updateTrack
+(logged in with user that created trackId=5)
+ mutation{
+  updateTrack(trackId:5, title:"Track5", description:"desc", url:"http://track5.com"){
+    track{
+      id
+      title
+      description
+      url
+    }
+  }
+}
+
+o/p:
+{
+  "data": {
+    "updateTrack": {
+      "track": {
+        "id": "5",
+        "title": "Track5",
+        "description": "desc",
+        "url": "http://track5.com"
+      }
+    }
+  }
+}
+If logged in by different user:
+{
+  "errors": [
+    {
+      "message": "Not permitted to update this track.",
+      "locations": [
+        {
+          "line": 42,
+          "column": 3
+        }
+      ],
+      "path": [
+        "updateTrack"
+      ]
+    }
+  ],
+  "data": {
+    "updateTrack": null
+  }
+}
